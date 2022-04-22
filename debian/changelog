@@ -1,3 +1,8 @@
+nymea-experience-plugin-energy (1.1.0) jammy; urgency=medium
+
+
+ -- jenkins <developer@nymea.io>  Fri, 22 Apr 2022 12:11:30 +0200
+
 nymea-experience-plugin-energy (1.0.0) xenial; urgency=medium
 
   [ Simon Stürz ]
