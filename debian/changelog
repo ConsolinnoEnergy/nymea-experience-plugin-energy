@@ -1,4 +1,4 @@
-nymea-experience-plugin-energy (1.4.0) jammy; urgency=medium
+nymea-experience-plugin-energy (1.4.0-1) jammy; urgency=medium
 
   [ Michael Zanetti ]
   * Improve a debug print when internal counters are re-synced
