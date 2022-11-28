@@ -1,4 +1,28 @@
-nymea-experience-plugin-energy (1.4.0-1) qa; urgency=medium
+nymea-experience-plugin-energy (1.5.1) jammy; urgency=medium
+
+  [ Michael Zanetti ]
+  * Fix a lockup when resampling over a backwards DST switch
+
+ -- jenkins <developer@nymea.io>  Mon, 07 Nov 2022 12:49:10 +0100
+
+nymea-experience-plugin-energy (1.5.0) jammy; urgency=medium
+
+  [ Michael Zanetti ]
+  * Keep 15min, 1h and 3h sample logs for a longer time
+  * Create SQL indices on energy log DB for improved resampling
+    performance
+
+  [ Simon Stürz ]
+  * Update energy-plugin path environment variable behaviour
+
+ -- jenkins <developer@nymea.io>  Mon, 17 Oct 2022 11:22:57 +0200
+
+nymea-experience-plugin-energy (1.4.1) jammy; urgency=medium
+
+
+ -- jenkins <developer@nymea.io>  Fri, 23 Sep 2022 16:35:00 +0200
+
+nymea-experience-plugin-energy (1.4.0) jammy; urgency=medium
 
   [ Michael Zanetti ]
   * Improve a debug print when internal counters are re-synced
