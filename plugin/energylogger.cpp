@@ -7,6 +7,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlRecord>
+#include <QSqlIndex>
 #include <QSettings>
 
 #include <QLoggingCategory>
@@ -29,15 +30,15 @@ EnergyLogger::EnergyLogger(QObject *parent) : EnergyLogs(parent)
     // SQLite adds metadata and overhead of about 5%
     // The resulting database size can be estimated with (count being the sum of all numbers below):
     // (count * 50 bytes) + (count * things * 60 bytes) + 5%
-    // 10000 entries, with 5 energy things => ~4MB
+    // ~40000 entries, with 5 energy things => ~15MB
     // Note: use sqlite3_analyzer to see the approx. size per entry in each table.
 
     // One day 1440 min, let's keep one week
     m_maxMinuteSamples = 10080;
 
-    addConfig(SampleRate15Mins, SampleRate1Min, 2688); // 4 weeks
-    addConfig(SampleRate1Hour, SampleRate15Mins, 672); // 4 weeks
-    addConfig(SampleRate3Hours, SampleRate15Mins, 224); // 4 weeks
+    addConfig(SampleRate15Mins, SampleRate1Min, 16128); // 6 months
+    addConfig(SampleRate1Hour, SampleRate15Mins, 8760); // 1 year
+    addConfig(SampleRate3Hours, SampleRate15Mins, 2920); // 1 year
     addConfig(SampleRate1Day, SampleRate1Hour, 1095); // 3 years
     addConfig(SampleRate1Week, SampleRate1Day, 168); // 3 years
     addConfig(SampleRate1Month, SampleRate1Day, 240); // 20 years
@@ -453,6 +454,11 @@ bool EnergyLogger::initDB()
             return false;
         }
     }
+    m_db.exec("CREATE INDEX IF NOT EXISTS idx_powerBalance ON powerBalance(sampleRate, timestamp);");
+    if (m_db.lastError().isValid()) {
+        qCWarning(dcEnergyExperience()) << "Error creating powerBalance table index in energy log database. Driver error:" << m_db.lastError().driverText() << "Database error:" << m_db.lastError().databaseText();
+        return false;
+    }
 
     if (!m_db.tables().contains("thingPower")) {
         qCDebug(dcEnergyExperience()) << "No \"thingPower\" table in database. Creating it.";
@@ -469,6 +475,11 @@ bool EnergyLogger::initDB()
             qCWarning(dcEnergyExperience()) << "Error creating thingPower table in energy log database. Driver error:" << m_db.lastError().driverText() << "Database error:" << m_db.lastError().databaseText();
             return false;
         }
+    }
+    m_db.exec("CREATE INDEX IF NOT EXISTS idx_thingPower ON thingPower(thingId, sampleRate, timestamp);");
+    if (m_db.lastError().isValid()) {
+        qCWarning(dcEnergyExperience()) << "Error creating thingPower table index in energy log database. Driver error:" << m_db.lastError().driverText() << "Database error:" << m_db.lastError().databaseText();
+        return false;
     }
 
     if (!m_db.tables().contains("thingCache")) {
@@ -671,6 +682,10 @@ QDateTime EnergyLogger::nextSampleTimestamp(SampleRate sampleRate, const QDateTi
     case SampleRate3Hours:
         time.setHMS(time.hour() - (time.hour() % 3), 0, 0);
         next = QDateTime(date, time).addMSecs(3 * 60 * 60 * 1000);
+        if (next.time().hour() == 2) {
+            qCDebug(dcEnergyExperience()) << "DST switch detected!";
+            next = next.addMSecs(60 * 60 * 1000);
+        }
         break;
     case SampleRate1Day:
         next = QDateTime(date, QTime()).addDays(1);
