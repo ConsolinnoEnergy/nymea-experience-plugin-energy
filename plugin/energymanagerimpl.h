@@ -36,7 +36,6 @@ private:
     void unwatchThing(const ThingId &thingId);
 
     void updatePowerBalance();
-    void updateThingPower(Thing *thing);
 
 private slots:
     void logDumpConsumers();
