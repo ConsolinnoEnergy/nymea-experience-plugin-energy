@@ -1,3 +1,9 @@
+nymea-experience-plugin-energy (1.5.2) jammy; urgency=medium
+
+  * CherryPick: Fill in holes in the logs when the clock is changed forward
+
+  -- Leonhard Heizinger <lheizinger@consolinno.de>  Mon, 20 Sep 2023 09:12:14 +0100
+
 nymea-experience-plugin-energy (1.5.1-6) jammy; urgency=medium
 
   [ Michael Zanetti ]
