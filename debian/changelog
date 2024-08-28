@@ -1,4 +1,4 @@
-nymea-experience-plugin-energy (1.5.3-1) jammy; urgency=medium
+nymea-experience-plugin-energy (1.5.3-2) jammy; urgency=medium
 
   * Revert CherryPick: Fill in holes in the logs when the clock is changed forward (introduces JSONRPC flooding bug)
 
